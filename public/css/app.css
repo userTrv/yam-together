@@ -264,7 +264,10 @@ body { min-height: 100dvh; background: var(--bg); }
 .setting:first-child { border-top: 0; }
 .setting-col { flex-direction: column; align-items: stretch; gap: 12px; }
 .setting-row { display: flex; justify-content: space-between; gap: 16px; }
-.setting-title { font-weight: 500; }
+.setting-title { font-weight: 500; display: block; }
+.setting-grow { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.field-sm { height: 40px; font-size: 15px; }
+.setting:has(.setting-grow) { align-items: flex-end; }
 .setting-sub { font-size: 13px; line-height: 20px; color: var(--text-2); }
 .setting-value { font-size: 13px; color: var(--text); }
 .ym-flow { display: flex; flex-direction: column; gap: 12px; padding: 0 0 16px; }

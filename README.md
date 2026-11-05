@@ -13,7 +13,7 @@
 - [docs/architecture.md](docs/architecture.md) — как устроена синхронизация и почему так.
 - [docs/design.md](docs/design.md) — направление дизайна, аудит по unslop и landing-page-design.
 - [docs/marketing.md](docs/marketing.md) — позиционирование, аудитории, запуск, метрики.
-- [docs/pitch-yandex.md](docs/pitch-yandex.md) — что и как предлагать Яндексу.
+- [docs/pitch-yandex.md](docs/pitch-yandex.md) — что и как предлагать Яндексу. Презентация: https://claude.ai/artifact/7FxoqmPsqCkqZocAQnkF3Q (приватная, открыть доступ через Share).
 
 ## Запуск
 
@@ -43,17 +43,7 @@ npm run test:e2e          # 3 браузера в одном вагоне, ме�
 
 ## Деплой
 
-Один процесс Node за Caddy или nginx. Пример для Caddy:
-
-```
-vagon.example.ru {
-  reverse_proxy 127.0.0.1:8787 {
-    flush_interval -1   # не буферизовать SSE
-  }
-}
-```
-
-И запуск через systemd с `TRUST_PROXY=1`. Состояние вагонов в памяти: при перезапуске вагоны пропадают, клиенты предложат войти заново.
+Один процесс Node за Caddy или nginx: [deploy/Caddyfile.example](deploy/Caddyfile.example) и юнит [deploy/vagon.service](deploy/vagon.service) (отдельный пользователь, `ProtectSystem=strict`, `TRUST_PROXY=1`). Для nginx важно `proxy_buffering off` на `/api/rooms/`, иначе события SSE будут приходить пачками. Состояние вагонов в памяти: при перезапуске вагоны пропадают, клиенты предложат войти заново.
 
 ## Структура
 

@@ -1,0 +1,8 @@
+# Вагон за Caddy. Домен заменить на свой.
+vagon.example.ru {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:8787 {
+		# SSE: события должны уходить сразу, без буфера
+		flush_interval -1
+	}
+}

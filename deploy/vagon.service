@@ -1,0 +1,26 @@
+# systemd-юнит для Вагона. Положить в /etc/systemd/system/vagon.service,
+# код — в /opt/vagon, пользователь vagon без shell и прав root.
+[Unit]
+Description=Vagon — синхронное прослушивание
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=vagon
+Group=vagon
+WorkingDirectory=/opt/vagon
+ExecStart=/usr/bin/node server/index.js
+Environment=PORT=8787
+Environment=HOST=127.0.0.1
+Environment=TRUST_PROXY=1
+Restart=on-failure
+RestartSec=2
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadOnlyPaths=/opt/vagon
+MemoryMax=512M
+
+[Install]
+WantedBy=multi-user.target

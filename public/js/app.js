@@ -432,7 +432,7 @@ function renderSettings() {
   const snap = state.room;
   $('host-setting').hidden = !isHost();
   $('everyone-controls').checked = snap.settings.everyoneControls;
-  $('me-name').textContent = state.me.name;
+  if (document.activeElement !== $('rename-input')) $('rename-input').value = state.me.name;
 }
 
 function renderReactBar() {
@@ -689,12 +689,13 @@ latency.addEventListener('input', () => {
   player.setLatency(v);
 });
 
-$('rename').addEventListener('click', () => {
-  const name = prompt('Как вас называть в вагоне', state.me.name);
-  if (name && name.trim()) {
-    store.set('name', name.trim());
-    act({ type: 'rename', name: name.trim() }).catch(() => {});
-  }
+$('rename-form').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const name = $('rename-input').value.trim();
+  if (!name || name === state.me.name) return;
+  store.set('name', name);
+  act({ type: 'rename', name }).then(() => toast('Теперь вы ' + name)).catch(() => {});
+  $('rename-input').blur();
 });
 $('everyone-controls').addEventListener('change', (e) => act({ type: 'settings', everyoneControls: e.target.checked }).catch(() => {}));
 let tripBlob = null;

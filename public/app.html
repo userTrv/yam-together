@@ -241,13 +241,13 @@
         <input type="range" class="range" id="latency" min="0" max="400" step="10" value="0" aria-label="Задержка наушников, мс">
       </div>
 
-      <div class="setting">
-        <div class="setting-text">
-          <p class="setting-title">Ваше имя</p>
-          <p class="setting-sub" id="me-name"></p>
+      <form class="setting" id="rename-form" novalidate>
+        <div class="setting-text setting-grow">
+          <label class="setting-title" for="rename-input">Ваше имя</label>
+          <input class="field field-sm" id="rename-input" maxlength="24" autocomplete="nickname">
         </div>
-        <button class="btn btn-sm" id="rename" type="button">Изменить</button>
-      </div>
+        <button class="btn btn-sm" type="submit">Сохранить</button>
+      </form>
 
       <div class="setting" id="host-setting" hidden>
         <div class="setting-text">
