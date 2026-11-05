@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Вагон — один трек на всех, каждый в своих наушниках</title>
+  <meta name="description" content="Соберите общую очередь из Яндекс Музыки: у всех в наушниках играет один и тот же трек секунда в секунду. Работает в метро, даже когда пропадает связь.">
+  <meta name="theme-color" content="#0b0d14">
+  <meta property="og:title" content="Вагон — один трек на весь вагон">
+  <meta property="og:description" content="Каждый в своих наушниках, а играет у всех одно и то же. Общая очередь из Яндекс Музыки.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/landing.css">
+  <script type="module" src="/js/landing.js"></script>
+</head>
+<body>
+  <a class="sr-only" href="#main">К содержимому</a>
+
+  <header class="nav-wrap">
+    <nav class="nav" aria-label="Главное меню">
+      <a class="wordmark" href="/" aria-current="page">
+        <svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h18"/><circle cx="12" cy="12" r="4.5"/></svg>
+        Вагон
+      </a>
+      <div class="nav-links">
+        <a href="#how">Как это работает</a>
+        <a href="#metro">В метро</a>
+        <a href="#faq">Вопросы</a>
+      </div>
+      <a class="btn btn-primary btn-sm" href="/new">Создать вагон</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="hero-text">
+        <h1>Один трек<br>на весь вагон</h1>
+        <p class="hero-sub">Каждый в своих наушниках, а играет у всех одно и то же, секунда в секунду. Соберите общую очередь из Яндекс Музыки и слушайте вместе по дороге.</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary btn-lg" href="/new">Создать вагон</a>
+          <form class="code-form" id="code-form" action="/join" method="get" novalidate>
+            <label class="sr-only" for="code">Код вагона</label>
+            <input class="field mono" id="code" name="code" maxlength="5" placeholder="Код" autocomplete="off" autocapitalize="characters" spellcheck="false">
+            <button class="btn btn-lg" type="submit">Войти</button>
+          </form>
+        </div>
+        <p class="hero-proof"><span class="dot-ok"></span><span id="proof-text">Расхождение между телефонами в тестах до 60 мс. На слух это одна песня</span></p>
+      </div>
+
+      <div class="hero-visual" aria-label="Так выглядит вагон на телефоне">
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="p-top">
+              <span class="p-word">Вагон</span>
+              <span class="p-code mono">K7QMP</span>
+            </div>
+            <div class="p-cover" id="p-cover"></div>
+            <div class="p-now">
+              <p class="p-label"><span class="station" style="--line:#3f7fe0"></span>Сейчас · ставит Лена</p>
+              <p class="p-title">Тоннельный свет</p>
+              <p class="p-artist">Демо Вагона</p>
+            </div>
+            <div class="p-bar"><span></span></div>
+            <div class="p-times mono"><span>1:12</span><span>2:02</span></div>
+            <p class="p-sync"><span class="dot-ok"></span>В синхроне с 3 пассажирами · разброс 24 мс</p>
+            <ol class="p-line">
+              <li style="--line:#3f7fe0" class="is-current"><span class="p-stop"></span><div><p>Тоннельный свет</p><p class="p-meta">сейчас · Лена</p></div></li>
+              <li style="--line:#e4473d"><span class="p-stop"></span><div><p>Пересадка</p><p class="p-meta">следующая · Кирилл</p></div></li>
+              <li style="--line:#3daa5c"><span class="p-stop"></span><div><p>Осторожно, двери</p><p class="p-meta">Аня</p></div></li>
+              <li style="--line:#f08a24"><span class="p-stop"></span><div><p>Последний поезд</p><p class="p-meta">Вы</p></div></li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tagline" aria-label="Главное">
+      <p class="tagline-text" id="tagline">Наушники у каждого свои. А музыка одна на весь вагон, и очередь вы собираете вместе.</p>
+    </section>
+
+    <section class="how reveal" id="how">
+      <h2>Как это работает</h2>
+      <ol class="how-line">
+        <li style="--line:#e4473d">
+          <span class="how-stop"></span>
+          <h3>Создайте вагон</h3>
+          <p>Одно нажатие, без регистрации. Получите код из пяти знаков и QR для соседа</p>
+        </li>
+        <li style="--line:#3f7fe0">
+          <span class="how-stop"></span>
+          <h3>Позовите своих</h3>
+          <p>Друг сканирует QR или открывает ссылку и попадает на ту же секунду трека, что у вас</p>
+        </li>
+        <li style="--line:#3daa5c">
+          <span class="how-stop"></span>
+          <h3>Ставьте треки по очереди</h3>
+          <p>Каждый добавляет своё, линия растёт у всех. Пауза и пропуск общие, или голосованием</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="metro reveal" id="metro">
+      <div class="metro-text">
+        <h2>Сделан для метро</h2>
+        <p class="lead">Связь между станциями пропадает, а музыка не должна. Поэтому вагон не стримит звук в реальном времени, а договаривается о времени.</p>
+        <ul class="facts">
+          <li>
+            <h3>Трек уже в телефоне</h3>
+            <p>Текущий и следующий трек скачиваются целиком заранее, пока есть сеть</p>
+          </li>
+          <li>
+            <h3>Часы вагона сверены</h3>
+            <p>Телефоны сверяют время с сервером как в NTP и знают, какая секунда играет у всех</p>
+          </li>
+          <li>
+            <h3>Без сети играет дальше</h3>
+            <p>В тоннеле каждый телефон ведёт очередь сам. На станции вагон молча подтягивается, если кто-то ушёл вперёд</p>
+          </li>
+        </ul>
+      </div>
+      <figure class="tunnel" aria-label="Схема: связь пропала на перегоне, синхронность сохранилась">
+        <svg viewBox="0 0 520 260" role="img" aria-hidden="true">
+          <text x="24" y="40" class="t-label">Связь</text>
+          <path d="M24 64 H180" class="t-sig"/>
+          <path d="M180 64 H340" class="t-sig t-sig-off"/>
+          <path d="M340 64 H496" class="t-sig"/>
+          <text x="260" y="52" text-anchor="middle" class="t-muted">перегон без сети</text>
+
+          <text x="24" y="120" class="t-label">Лена</text>
+          <path d="M24 140 H496" stroke="#3f7fe0" class="t-line"/>
+          <text x="24" y="188" class="t-label">Кирилл</text>
+          <path d="M24 208 H496" stroke="#e4473d" class="t-line"/>
+
+          <circle cx="60" cy="140" r="9" class="t-st" stroke="#3f7fe0"/>
+          <circle cx="60" cy="208" r="9" class="t-st" stroke="#e4473d"/>
+          <circle cx="260" cy="140" r="9" class="t-st" stroke="#3f7fe0"/>
+          <circle cx="260" cy="208" r="9" class="t-st" stroke="#e4473d"/>
+          <circle cx="460" cy="140" r="9" class="t-st" stroke="#3f7fe0"/>
+          <circle cx="460" cy="208" r="9" class="t-st" stroke="#e4473d"/>
+          <path d="M260 156 V192" class="t-sync"/>
+          <text x="272" y="178" class="t-mono">±30 мс</text>
+          <path d="M460 156 V192" class="t-sync"/>
+          <text x="472" y="178" class="t-mono">±20 мс</text>
+          <text x="60" y="240" text-anchor="middle" class="t-muted">Охотный ряд</text>
+          <text x="260" y="240" text-anchor="middle" class="t-muted">трек 2</text>
+          <text x="460" y="240" text-anchor="middle" class="t-muted">Лубянка</text>
+        </svg>
+      </figure>
+    </section>
+
+    <section class="uses reveal">
+      <h2>Где пригодится</h2>
+      <ul class="uses-list">
+        <li><span class="station" style="--line:#e4473d"></span><div><h3>Дорога вдвоём или втроём</h3><p>Метро, электричка, самолёт. Один провод на двоих больше не нужен</p></div></li>
+        <li><span class="station" style="--line:#3f7fe0"></span><div><h3>На расстоянии</h3><p>Пара в разных городах слушает альбом одновременно и пишет друг другу реакции</p></div></li>
+        <li><span class="station" style="--line:#3daa5c"></span><div><h3>Тихая дискотека</h3><p>Вечеринка в наушниках, где музыку ставит не один диджей, а все по очереди</p></div></li>
+        <li><span class="station" style="--line:#f08a24"></span><div><h3>Пробежка группой</h3><p>Один темп у всех в ушах, и никто не убегает вперёд по плейлисту</p></div></li>
+      </ul>
+    </section>
+
+    <section class="ym reveal">
+      <div class="ym-card">
+        <h2>Своя Яндекс Музыка у каждого</h2>
+        <p>Вагон не раздаёт музыку и не крутит её с одного аккаунта. Каждый пассажир подключает свой аккаунт и слушает через свою подписку Плюс, вагон только говорит, какой трек и с какой секунды. Без подписки Яндекс даёт 30 секунд трека, а демо-треки Вагона работают вообще без аккаунта.</p>
+        <p class="fine">Интеграция с Яндекс Музыкой экспериментальная: открытого API для сторонних приложений у сервиса нет. Вагон не связан с Яндексом.</p>
+      </div>
+    </section>
+
+    <section class="faq reveal" id="faq">
+      <h2>Вопросы</h2>
+      <div class="faq-list">
+        <details>
+          <summary>Нужно ли что-то устанавливать</summary>
+          <p>Нет. Вагон открывается в браузере телефона. Если добавить его на экран «Домой», он будет открываться как приложение и запускаться без сети.</p>
+        </details>
+        <details>
+          <summary>Насколько точно совпадает звук</summary>
+          <p>Телефоны сверяют часы с сервером и подстраивают воспроизведение каждые четверть секунды. В наших тестах разброс между устройствами держится в пределах 60 мс. Bluetooth-наушники добавляют свою задержку, для них в настройках есть сдвиг.</p>
+        </details>
+        <details>
+          <summary>Что будет, если пропадёт связь</summary>
+          <p>Музыка продолжит играть: текущий и следующий трек уже скачаны, а очередь каждый телефон ведёт по общим часам. Команды вроде паузы дойдут, когда связь вернётся.</p>
+        </details>
+        <details>
+          <summary>Нужна ли подписка Яндекс Плюс</summary>
+          <p>Чтобы слышать треки из каталога целиком, да, у каждого своя. Без подписки Яндекс отдаёт только 30 секунд. Демо-треки Вагона работают без всякого аккаунта.</p>
+        </details>
+        <details>
+          <summary>Сколько человек помещается в вагон</summary>
+          <p>До 40 пассажиров. Пока все слушают, вагон живёт. Если все вышли, через шесть часов он уезжает в депо.</p>
+        </details>
+        <details>
+          <summary>Кто управляет музыкой</summary>
+          <p>По умолчанию пульт у всех: каждый может поставить паузу или пропустить трек. Хозяин вагона может забрать пульт себе, тогда остальные пропускают трек голосованием.</p>
+        </details>
+        <details>
+          <summary>Что Вагон знает обо мне</summary>
+          <p>Только имя, которое вы ввели, и что вы добавили в очередь. Токен Яндекса хранится в вашем браузере, сервер его не сохраняет. Подробнее на странице о <a href="/privacy">данных</a>.</p>
+        </details>
+      </div>
+    </section>
+
+    <section class="final reveal">
+      <h2>Следующая станция ваша</h2>
+      <p>Создайте вагон и отправьте код тому, кто едет рядом</p>
+      <a class="btn btn-primary btn-lg" href="/new">Создать вагон</a>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span class="wordmark-small">Вагон · 2026</span>
+    <nav aria-label="Документы">
+      <a href="/privacy">Данные и конфиденциальность</a>
+      <a href="/terms">Условия</a>
+    </nav>
+  </footer>
+</body>
+</html>

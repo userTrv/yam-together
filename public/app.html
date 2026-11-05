@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Вагон</title>
+  <meta name="description" content="Общая очередь, у всех в наушниках один трек секунда в секунду">
+  <meta name="theme-color" content="#0b0d14">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="/css/base.css">
+  <link rel="stylesheet" href="/css/app.css">
+  <script type="module" src="/js/app.js"></script>
+</head>
+<body>
+  <a class="sr-only" href="#main">К содержимому</a>
+
+  <!-- Вход: создать вагон или войти по ссылке -->
+  <main id="view-join" class="join" hidden>
+    <a class="wordmark" href="/" aria-label="Вагон, на главную">
+      <svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h18"/><circle cx="12" cy="12" r="4.5"/></svg>
+      Вагон
+    </a>
+    <section class="join-card">
+      <div class="join-preview" id="join-preview" hidden>
+        <p class="caption" id="join-preview-label">Вагон</p>
+        <div class="join-now">
+          <img id="join-cover" alt="" width="56" height="56">
+          <div>
+            <p class="join-title" id="join-title"></p>
+            <p class="join-meta" id="join-meta"></p>
+          </div>
+        </div>
+      </div>
+      <h1 id="join-heading">Новый вагон</h1>
+      <p class="join-sub" id="join-sub">Придумайте имя, его увидят остальные пассажиры</p>
+      <form id="join-form" class="join-form" novalidate>
+        <label class="sr-only" for="join-name">Ваше имя</label>
+        <input class="field" id="join-name" name="name" maxlength="24" autocomplete="nickname" placeholder="Имя" required>
+        <div class="join-code-row" id="join-code-row" hidden>
+          <label class="sr-only" for="join-code">Код вагона</label>
+          <input class="field mono code-input" id="join-code" maxlength="5" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Код из 5 знаков">
+        </div>
+        <p class="form-error" id="join-error" role="alert" hidden></p>
+        <button class="btn btn-primary join-submit" id="join-submit" type="submit">Создать вагон</button>
+      </form>
+      <button class="btn btn-ghost btn-sm" id="join-switch" type="button">У меня есть код</button>
+    </section>
+  </main>
+
+  <!-- Вагон -->
+  <div id="view-room" class="room" hidden>
+    <header class="topbar">
+      <a class="wordmark" href="/" aria-label="Вагон, на главную">
+        <svg class="mark" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h18"/><circle cx="12" cy="12" r="4.5"/></svg>
+        <span class="wordmark-text">Вагон</span>
+      </a>
+      <button class="code-chip mono" id="code-chip" type="button" aria-label="Код вагона, показать приглашение"></button>
+      <div class="topbar-actions">
+        <span class="net" id="net" hidden>
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20h.01"/><path d="M8.5 16.429a5 5 0 0 1 7 0"/><path d="M5 12.859a10 10 0 0 1 5.17-2.69"/><path d="M19 12.859a10 10 0 0 0-2.007-1.523"/><path d="M2 8.82a15 15 0 0 1 4.177-2.643"/><path d="M22 8.82a15 15 0 0 0-11.288-3.764"/><path d="m2 2 20 20"/></svg>
+          <span>В тоннеле</span>
+        </span>
+        <button class="btn btn-ghost btn-icon" id="open-invite" type="button" aria-label="Позвать в вагон">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6"/><path d="M22 11h-6"/></svg>
+        </button>
+        <button class="btn btn-ghost btn-icon" id="open-settings" type="button" aria-label="Настройки">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7h-9"/><path d="M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main id="main" class="room-grid">
+      <section class="now" aria-label="Сейчас играет">
+        <div class="cover-wrap">
+          <img class="cover" id="now-cover" alt="" width="640" height="640">
+          <div class="cover-empty" id="now-empty">
+            <svg viewBox="0 0 240 240" aria-hidden="true"><path d="M-10 120 H250" stroke="#1a1e28" stroke-width="10"/><circle cx="120" cy="120" r="14" fill="#0b0d14" stroke="#7a8296" stroke-width="5"/></svg>
+          </div>
+          <div class="reactions-layer" id="reactions-layer" aria-hidden="true"></div>
+        </div>
+        <div class="now-text">
+          <p class="now-label caption" id="now-label">Пока тихо</p>
+          <h1 class="now-title" id="now-title">Добавьте первый трек</h1>
+          <p class="now-artist" id="now-artist">Он заиграет у всех сразу</p>
+        </div>
+        <div class="progress" id="progress">
+          <div class="bar"><div class="bar-fill" id="bar-fill"></div></div>
+          <div class="times mono"><span id="t-pos">0:00</span><span id="t-dur">0:00</span></div>
+        </div>
+        <div class="controls">
+          <button class="btn btn-ghost btn-icon" id="btn-mute" type="button" aria-label="Выключить звук у себя">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 4.702a.705.705 0 0 0-1.203-.498L6.413 7.587A1.4 1.4 0 0 1 5.416 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.416a1.4 1.4 0 0 1 .997.413l3.383 3.384A.705.705 0 0 0 11 19.298z"/><path class="wave" d="M16 9a5 5 0 0 1 0 6"/><path class="wave" d="M19.364 18.364a9 9 0 0 0 0-12.728"/><path class="cross" d="M22 9l-6 6"/><path class="cross" d="M16 9l6 6"/></svg>
+          </button>
+          <button class="play" id="btn-play" type="button" aria-label="Пауза для всех">
+            <svg class="icon icon-lg i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg>
+            <svg class="icon icon-lg i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14"/><path d="M16 5v14"/></svg>
+          </button>
+          <button class="btn btn-ghost skip" id="btn-skip" type="button">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5v15l10-7.5z"/><path d="M19 5v14"/></svg>
+            <span id="skip-label">Дальше</span>
+          </button>
+        </div>
+        <div class="sync" id="sync" aria-live="polite">
+          <span class="sync-dot" id="sync-dot"></span>
+          <span id="sync-text">Подключаемся</span>
+        </div>
+        <div class="tap-to-listen" id="tap-to-listen" hidden>
+          <button class="btn btn-primary" id="btn-listen" type="button">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3"/></svg>
+            Включить звук у себя
+          </button>
+        </div>
+        <div class="react-bar" id="react-bar" role="group" aria-label="Реакции"></div>
+      </section>
+
+      <section class="side">
+        <div class="panel passengers-panel">
+          <div class="panel-head">
+            <h2>Пассажиры</h2>
+            <span class="caption mono" id="passenger-count"></span>
+          </div>
+          <ul class="passengers" id="passengers"></ul>
+        </div>
+
+        <div class="panel line-panel">
+          <div class="panel-head">
+            <h2>Линия</h2>
+            <span class="caption mono" id="line-meta"></span>
+          </div>
+          <ol class="line" id="line"></ol>
+          <div class="line-empty" id="line-empty">
+            <p>Здесь будут станции: каждый трек — остановка. Добавляйте по очереди, линия растёт у всех сразу</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <div class="dock">
+      <button class="btn btn-primary dock-add" id="open-add" type="button">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+        Добавить трек
+      </button>
+    </div>
+  </div>
+
+  <!-- Шторки -->
+  <div class="scrim" id="scrim" hidden></div>
+
+  <section class="sheet" id="sheet-add" role="dialog" aria-modal="true" aria-labelledby="add-title" hidden>
+    <div class="sheet-head">
+      <h2 id="add-title">Добавить трек</h2>
+      <button class="btn btn-ghost btn-icon" data-close type="button" aria-label="Закрыть"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="tab-ym" aria-selected="true" aria-controls="pane-ym" type="button">Яндекс Музыка</button>
+      <button class="tab" role="tab" id="tab-demo" aria-selected="false" aria-controls="pane-demo" type="button">Демо</button>
+    </div>
+    <div class="pane" id="pane-ym" role="tabpanel" aria-labelledby="tab-ym">
+      <div class="ym-connect" id="ym-connect-hint" hidden>
+        <p>Чтобы искать и слушать треки из каталога, подключите свой аккаунт Яндекс Музыки. Каждый пассажир слушает через свою подписку</p>
+        <button class="btn btn-sm" id="ym-connect-open" type="button">Подключить аккаунт</button>
+      </div>
+      <form class="search" id="search-form" role="search">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <label class="sr-only" for="search-input">Поиск по Яндекс Музыке</label>
+        <input class="field search-field" id="search-input" type="search" placeholder="Поиск" autocomplete="off" enterkeyhint="search">
+      </form>
+      <ul class="results" id="ym-results" aria-live="polite"></ul>
+    </div>
+    <div class="pane" id="pane-demo" role="tabpanel" aria-labelledby="tab-demo" hidden>
+      <p class="pane-note">Демо-треки синтезируются прямо в телефоне. Работают без аккаунта и без связи</p>
+      <ul class="results" id="demo-results"></ul>
+    </div>
+  </section>
+
+  <section class="sheet" id="sheet-invite" role="dialog" aria-modal="true" aria-labelledby="invite-title" hidden>
+    <div class="sheet-head">
+      <h2 id="invite-title">Позвать в вагон</h2>
+      <button class="btn btn-ghost btn-icon" data-close type="button" aria-label="Закрыть"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+    <div class="invite">
+      <div class="qr" id="invite-qr"></div>
+      <div class="invite-text">
+        <p class="caption">Код вагона</p>
+        <p class="invite-code mono" id="invite-code"></p>
+        <p class="invite-help">Покажите QR соседу или отправьте ссылку. Код вводится на главной</p>
+        <div class="invite-actions">
+          <button class="btn btn-primary" id="invite-share" type="button">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="m16 6-4-4-4 4"/><path d="M12 2v13"/></svg>
+            Отправить ссылку
+          </button>
+          <button class="btn" id="invite-copy" type="button">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+            <span>Скопировать</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet" id="sheet-settings" role="dialog" aria-modal="true" aria-labelledby="settings-title" hidden>
+    <div class="sheet-head">
+      <h2 id="settings-title">Настройки</h2>
+      <button class="btn btn-ghost btn-icon" data-close type="button" aria-label="Закрыть"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+    <div class="settings">
+      <div class="setting">
+        <div class="setting-text">
+          <p class="setting-title">Яндекс Музыка</p>
+          <p class="setting-sub" id="ym-status">Не подключена</p>
+        </div>
+        <button class="btn btn-sm" id="ym-toggle" type="button">Подключить</button>
+      </div>
+      <div class="ym-flow" id="ym-flow" hidden>
+        <ol class="steps">
+          <li>Откройте <a id="ym-oauth-link" href="#" target="_blank" rel="noopener noreferrer">страницу входа Яндекса</a> и войдите в свой аккаунт</li>
+          <li>Яндекс перекинет на новую страницу. Скопируйте её адрес целиком и вставьте сюда</li>
+        </ol>
+        <form id="ym-form" class="ym-form" novalidate>
+          <label class="sr-only" for="ym-token-input">Адрес страницы или токен</label>
+          <input class="field mono" id="ym-token-input" autocomplete="off" spellcheck="false" placeholder="https://music.yandex.ru/#access_token=…">
+          <button class="btn btn-primary btn-sm" type="submit">Подключить</button>
+        </form>
+        <p class="form-error" id="ym-error" role="alert" hidden></p>
+        <p class="fine">Токен хранится только в этом браузере. Сервер Вагона передаёт его Яндексу при поиске и загрузке трека и нигде не сохраняет. Это экспериментальная интеграция: официального API для сторонних приложений у Яндекс Музыки пока нет</p>
+      </div>
+
+      <div class="setting setting-col">
+        <div class="setting-row">
+          <div class="setting-text">
+            <p class="setting-title">Задержка наушников</p>
+            <p class="setting-sub">Bluetooth опаздывает на 100–250 мс. Сдвиньте, если слышите эхо рядом с соседом</p>
+          </div>
+          <span class="mono setting-value" id="latency-value">0 мс</span>
+        </div>
+        <input type="range" class="range" id="latency" min="0" max="400" step="10" value="0" aria-label="Задержка наушников, мс">
+      </div>
+
+      <div class="setting">
+        <div class="setting-text">
+          <p class="setting-title">Ваше имя</p>
+          <p class="setting-sub" id="me-name"></p>
+        </div>
+        <button class="btn btn-sm" id="rename" type="button">Изменить</button>
+      </div>
+
+      <div class="setting" id="host-setting" hidden>
+        <div class="setting-text">
+          <p class="setting-title">Пульт у всех</p>
+          <p class="setting-sub">Пауза, перемотка и «дальше» доступны каждому. Без этого остальные голосуют за пропуск</p>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="everyone-controls">
+          <span class="switch-track" aria-hidden="true"></span>
+          <span class="sr-only">Пульт у всех</span>
+        </label>
+      </div>
+
+      <div class="setting">
+        <div class="setting-text">
+          <p class="setting-title">Выйти из вагона</p>
+          <p class="setting-sub">Очередь останется у остальных</p>
+        </div>
+        <button class="btn btn-sm" id="leave" type="button">Выйти</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="toasts" id="toasts" aria-live="polite"></div>
+</body>
+</html>
