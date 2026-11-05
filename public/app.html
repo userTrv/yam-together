@@ -263,10 +263,35 @@
 
       <div class="setting">
         <div class="setting-text">
+          <p class="setting-title">Итоги поездки</p>
+          <p class="setting-sub">Сколько слушали вместе и какие станции проехали. Картинка для сторис</p>
+        </div>
+        <button class="btn btn-sm" id="open-trip" type="button">Показать</button>
+      </div>
+
+      <div class="setting">
+        <div class="setting-text">
           <p class="setting-title">Выйти из вагона</p>
           <p class="setting-sub">Очередь останется у остальных</p>
         </div>
         <button class="btn btn-sm" id="leave" type="button">Выйти</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="sheet" id="sheet-trip" role="dialog" aria-modal="true" aria-labelledby="trip-title" hidden>
+    <div class="sheet-head">
+      <h2 id="trip-title">Итоги поездки</h2>
+      <button class="btn btn-ghost btn-icon" data-close type="button" aria-label="Закрыть"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+    </div>
+    <div class="trip">
+      <img class="trip-card" id="trip-img" alt="Карточка итогов поездки" width="1080" height="1920">
+      <div class="trip-actions">
+        <button class="btn btn-primary" id="trip-share" type="button">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><path d="m16 6-4-4-4 4"/><path d="M12 2v13"/></svg>
+          Поделиться
+        </button>
+        <a class="btn" id="trip-save" download="vagon.png" href="#">Сохранить картинку</a>
       </div>
     </div>
   </section>

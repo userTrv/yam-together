@@ -76,11 +76,29 @@ await host.waitForTimeout(3500);
 const resumed = await sample();
 console.log('после продолжения играют:', resumed.filter((x) => !x.paused).length);
 
+// Тоннель: у одного гостя пропадает сеть на 12 секунд, пока остальные слушают.
+const tunnel = guests[guests.length - 1];
+await tunnel.context().setOffline(true);
+await host.waitForTimeout(12000);
+const inTunnel = await sample();
+const refT = inTunnel[0].t;
+const alignedT = inTunnel.map((x) => x.pos - (x.t - refT) / 1000);
+const tunnelSpread = (Math.max(...alignedT) - Math.min(...alignedT)) * 1000;
+const tunnelPlaying = !inTunnel[inTunnel.length - 1].paused;
+const netShown = await tunnel.evaluate(() => !document.getElementById('net').hidden);
+console.log(`в тоннеле: играет=${tunnelPlaying}, значок сети=${netShown}, разброс ${tunnelSpread.toFixed(1)} мс`);
+await tunnel.context().setOffline(false);
+await host.waitForTimeout(4000);
+const back = await tunnel.evaluate(() => document.getElementById('net').hidden);
+console.log('после станции значок сети скрыт:', back);
+
 await host.screenshot({ path: process.env.SHOT || 'test-results/room.png', fullPage: false });
 
 const settled = spreads.slice(3);
 const max = Math.max(...settled);
 const avg = settled.reduce((a, b) => a + b, 0) / settled.length;
-console.log(JSON.stringify({ samples: settled.length, maxSpreadMs: +max.toFixed(1), avgSpreadMs: +avg.toFixed(1), errors }));
+const realErrors = errors.filter((e) => !/ERR_INTERNET_DISCONNECTED|Failed to load resource|net::ERR/.test(e));
+console.log(JSON.stringify({ samples: settled.length, maxSpreadMs: +max.toFixed(1), avgSpreadMs: +avg.toFixed(1), tunnelSpreadMs: +tunnelSpread.toFixed(1), errors: realErrors }));
 await browser.close();
-if (!settled.length || max > 80 || errors.length || paused.some((x) => !x.paused) || resumed.some((x) => x.paused)) process.exit(1);
+if (!settled.length || max > 80 || realErrors.length || paused.some((x) => !x.paused) || resumed.some((x) => x.paused)
+  || !tunnelPlaying || tunnelSpread > 80 || !netShown || !back) process.exit(1);

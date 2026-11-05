@@ -112,8 +112,8 @@ setInterval(() => {
 }, 1000).unref();
 
 setInterval(() => {
-  for (const set of streams.values()) for (const s of set) s.res.write(`: keep-alive ${Date.now()}\n\n`);
-}, 15000).unref();
+  for (const set of streams.values()) for (const s of set) sse(s.res, 'ping', { now: Date.now() });
+}, 10000).unref();
 
 setInterval(() => {
   const before = rooms.map.size;

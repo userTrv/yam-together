@@ -6,6 +6,7 @@ import { DEMO, coverFor } from './catalog.js';
 import { loadTrack, yandexToken, parseToken, ymFetch } from './sources.js';
 import { qrSvg } from './qr.js';
 import { resolve } from '/shared/timeline.js';
+import { Trip } from './trip.js';
 
 const REACTIONS = ['🔥', '❤️', '😂', '🕺', '😮', '👏'];
 const YM_OAUTH = 'https://oauth.yandex.ru/authorize?response_type=token&client_id=23cabbbdc6cd418abb4b39c32c41195d';
@@ -159,6 +160,7 @@ async function enterRoom(code, member) {
   document.title = `Вагон ${code}`;
   renderReactBar();
   renderDemoList();
+  state.trip = new Trip(code);
   await clock.sync(5);
   connect();
   setInterval(() => clock.sync(3), 30000);
@@ -171,9 +173,10 @@ function connect() {
   const es = new EventSource(`/api/rooms/${state.code}/events?id=${encodeURIComponent(id)}&key=${encodeURIComponent(key)}`);
   state.es = es;
   let opened = false;
-  es.addEventListener('open', () => { opened = true; setOnline(true); });
+  es.addEventListener('open', () => { opened = true; state.lastEventAt = Date.now(); setOnline(navigator.onLine); });
   es.addEventListener('state', (e) => { state.lastEventAt = Date.now(); applySnapshot(JSON.parse(e.data)); });
-  es.addEventListener('event', (e) => onRoomEvent(JSON.parse(e.data)));
+  es.addEventListener('event', (e) => { state.lastEventAt = Date.now(); onRoomEvent(JSON.parse(e.data)); });
+  es.addEventListener('ping', () => { state.lastEventAt = Date.now(); setOnline(navigator.onLine); });
   es.addEventListener('error', async () => {
     setOnline(false);
     if (!opened) {
@@ -199,7 +202,13 @@ function setOnline(on) {
   if (on) clock.sync(3);
 }
 
-window.addEventListener('online', () => { if (state.es?.readyState === 2) connect(); });
+window.addEventListener('online', () => { if (state.code) connect(); });
+window.addEventListener('offline', () => setOnline(false));
+// Сервер шлёт ping раз в 10 секунд. Нет вестей 25 секунд — мы в тоннеле, переподключаемся.
+setInterval(() => {
+  if (!state.code || !state.lastEventAt) return;
+  if (Date.now() - state.lastEventAt > 25000) { setOnline(false); connect(); state.lastEventAt = Date.now() - 15000; }
+}, 5000);
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible' && state.code) {
     clock.sync(3);
@@ -324,6 +333,16 @@ function renderProgress() {
   }
 }
 setInterval(renderProgress, 250);
+
+// Считаем время, когда звук реально шёл вместе с вагоном.
+setInterval(() => {
+  const snap = state.room;
+  if (!snap || !state.trip || player.audio.paused || player.muted) return;
+  if (player.status.state !== 'synced' && player.status.state !== 'catching') return;
+  const r = resolve(snap.queue, snap.playback, clock.now());
+  state.trip.tick(snap.queue[r.index], colorOf, snap.members, state.me.id);
+}, 1000);
+addEventListener('pagehide', () => state.trip?.save());
 
 const STATE_TEXT = {
   synced: 'в синхроне', catching: 'догоняет', loading: 'грузит трек', blocked: 'без звука',
@@ -678,6 +697,25 @@ $('rename').addEventListener('click', () => {
   }
 });
 $('everyone-controls').addEventListener('change', (e) => act({ type: 'settings', everyoneControls: e.target.checked }).catch(() => {}));
+let tripBlob = null;
+async function openTrip() {
+  state.trip.save();
+  const canvas = await state.trip.render();
+  const url = canvas.toDataURL('image/png');
+  $('trip-img').src = url;
+  $('trip-save').href = url;
+  $('trip-save').download = `vagon-${state.code}.png`;
+  tripBlob = await new Promise((r) => canvas.toBlob(r, 'image/png'));
+  const file = tripBlob && new File([tripBlob], `vagon-${state.code}.png`, { type: 'image/png' });
+  $('trip-share').hidden = !(file && navigator.canShare?.({ files: [file] }));
+  showSheet('sheet-trip');
+}
+$('open-trip').addEventListener('click', openTrip);
+$('trip-share').addEventListener('click', () => {
+  const file = new File([tripBlob], `vagon-${state.code}.png`, { type: 'image/png' });
+  navigator.share({ files: [file], text: `Слушали вместе в Вагоне ${location.origin}/r/${state.code}` }).catch(() => {});
+});
+
 $('leave').addEventListener('click', () => {
   store.set('member:' + state.code, null);
   state.es?.close();

@@ -1,10 +1,10 @@
 // Сервис-воркер: держит оболочку приложения в кэше, чтобы «Вагон» открывался
 // и без связи. API и звук не кэшируются здесь: треки плеер держит в памяти сам.
-const CACHE = 'vagon-v1';
+const CACHE = 'vagon-v2';
 const SHELL = [
   '/', '/app.html', '/css/base.css', '/css/app.css', '/css/landing.css',
   '/js/app.js', '/js/clock.js', '/js/player.js', '/js/sources.js', '/js/synth.js',
-  '/js/catalog.js', '/js/qr.js', '/js/landing.js', '/shared/timeline.js',
+  '/js/catalog.js', '/js/qr.js', '/js/trip.js', '/js/landing.js', '/shared/timeline.js',
   '/icon.svg', '/manifest.webmanifest',
 ];
 
